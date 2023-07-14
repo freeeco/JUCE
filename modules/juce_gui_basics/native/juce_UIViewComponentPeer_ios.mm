@@ -1787,6 +1787,9 @@ UIViewComponentPeer::UIViewComponentPeer (Component& comp, int windowStyleFlags,
 
     setTitle (component.getName());
     setVisible (component.isVisible());
+    
+    // currentlyFocusedPeer needs be set so that message boxes display in AUv3s
+    iOSGlobals::currentlyFocusedPeer = this;
 }
 
 UIViewComponentPeer::~UIViewComponentPeer()

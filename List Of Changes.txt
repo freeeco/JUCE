@@ -1,0 +1,116 @@
+
+Missing ok / cancel dialog boxes on iOS
+
+In file juce_UIViewComponentPeer_ios.mm
+
+UIViewComponentPeer::UIViewComponentPeer add this line at line 1791:
+
+
+
+    // currentlyFocusedPeer needs be set so that message boxes display in AUv3s
+    iOSGlobals::currentlyFocusedPeer = this;
+
+
+
+Like this:
+
+    setTitle (component.getName());
+    setVisible (component.isVisible());
+    
+    // currentlyFocusedPeer needs be set so that message boxes display in AUv3s
+    iOSGlobals::currentlyFocusedPeer = this;
+}
+
+
+
+
+
+Fix slow clicking needed on menus on iOS
+
+In file juce_PopupMenu.cpp
+
+handleMousePosition
+
+
+
+Add this at line 1384:
+
+
+  if (timeNow > window.timeEnteredCurrentChildComp +
+#if JUCE_IOS
+                10
+#else
+                100
+#endif
+
+
+
+Like this:
+
+ if (timeNow > window.timeEnteredCurrentChildComp +
+#if JUCE_IOS
+                10
+#else
+                100
+#endif
+             && window.reallyContains (localMousePos, true)
+
+
+
+
+
+Always show "Save" in save dialog box on iOS
+
+In file juce_FileChooser_ios.mm
+
+getViewController
+
+Change to this at line 189
+
+            UIDocumentPickerMode pickerMode = UIDocumentPickerModeExportToService;
+
+Like this:
+
+
+//            UIDocumentPickerMode pickerMode = currentFileOrDirectory.existsAsFile()
+//                                                ? UIDocumentPickerModeExportToService
+//                                                : UIDocumentPickerModeMoveToService;
+            // <-- fix: always show "Save" -->
+            UIDocumentPickerMode pickerMode = UIDocumentPickerModeExportToService;
+
+
+
+
+
+Small white corners of tooltip windows on some hosts
+
+In file juce_TooltipWindow.ccp
+
+TooltipWindow::TooltipWindow
+
+Change:
+
+    setOpaque (true);
+
+to: 
+
+    setOpaque (false); // set to false avoids white triangles on some hosts
+
+
+
+
+
+Resizable corner area is too small and fiddly to find with mouse
+
+In file juce_AudioProcessorEditor.cpp
+
+AudioProcessorEditor::editorResized
+
+At line 192
+
+Change 
+            const int resizerSize = 18;
+
+to 
+
+            const int resizerSize = 35;

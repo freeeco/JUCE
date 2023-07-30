@@ -1376,17 +1376,45 @@ private:
     uint32 lastScrollTime, lastMouseMoveTime = 0;
     bool isDown = false;
 
+    
+#if JUCE_IOS
+    void handleMousePosition (Point<int> globalMousePos)
+    {
+        auto localMousePos = window.getLocalPoint (nullptr, globalMousePos);
+        auto timeNow = Time::getMillisecondCounter();
+        
+        if (timeNow > window.timeEnteredCurrentChildComp + 10
+             && window.reallyContains (localMousePos, true)
+             && window.currentChild != nullptr
+             && ! (window.disableMouseMoves || window.isSubMenuVisible()))
+        {
+            window.showSubMenuFor (window.currentChild);
+        }
+        
+        // highlight only if pressed
+        
+        if (ModifierKeys::currentModifiers.isAnyMouseButtonDown()
+            || ComponentPeer::getCurrentModifiersRealtime().isAnyMouseButtonDown()){
+            highlightItemUnderMouse (globalMousePos, localMousePos, timeNow);
+        }
+        
+        const bool overScrollArea = scrollIfNecessary (localMousePos, timeNow);
+        const bool isOverAny = window.isOverAnyMenu();
+        
+        if (window.hideOnExit && window.hasBeenOver && ! isOverAny)
+            window.hide (nullptr, true);
+        else
+            checkButtonState (localMousePos, timeNow, isDown, overScrollArea, isOverAny);
+    }
+
+#else
+    
     void handleMousePosition (Point<int> globalMousePos)
     {
         auto localMousePos = window.getLocalPoint (nullptr, globalMousePos);
         auto timeNow = Time::getMillisecondCounter();
 
-        if (timeNow > window.timeEnteredCurrentChildComp +
-#if JUCE_IOS
-                10
-#else
-                100
-#endif
+        if (timeNow > window.timeEnteredCurrentChildComp + 100
              && window.reallyContains (localMousePos, true)
              && window.currentChild != nullptr
              && ! (window.disableMouseMoves || window.isSubMenuVisible()))
@@ -1404,7 +1432,9 @@ private:
         else
             checkButtonState (localMousePos, timeNow, isDown, overScrollArea, isOverAny);
     }
-
+    
+#endif
+    
     void checkButtonState (Point<int> localMousePos, const uint32 timeNow,
                            const bool wasDown, const bool overScrollArea, const bool isOverAny)
     {

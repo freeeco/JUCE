@@ -1378,6 +1378,7 @@ private:
 
     
 #if JUCE_IOS
+    
     void handleMousePosition (Point<int> globalMousePos)
     {
         auto localMousePos = window.getLocalPoint (nullptr, globalMousePos);

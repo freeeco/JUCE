@@ -8,12 +8,14 @@ TooltipWindow::TooltipWindow
 
 Change:
 
+```
     setOpaque (true);
+```
 
 to: 
-
+```
     setOpaque (false); // set to false avoids white triangles on some hosts
-
+```
 
 
 
@@ -27,12 +29,13 @@ AudioProcessorEditor::editorResized
 At line 192
 
 Change 
+```
             const int resizerSize = 18;
-
+```
 to 
-
+```
             const int resizerSize = 35;
-
+```
 
 
 
@@ -48,20 +51,21 @@ In file juce_UIViewComponentPeer_ios.mm
 UIViewComponentPeer::UIViewComponentPeer add this line at line 1791:
 
 
-
+```
     // currentlyFocusedPeer needs be set so that message boxes display in AUv3s
     iOSGlobals::currentlyFocusedPeer = this;
-
+```
 
 
 Like this:
-
+```
     setTitle (component.getName());
     setVisible (component.isVisible());
     
     // currentlyFocusedPeer needs be set so that message boxes display in AUv3s
     iOSGlobals::currentlyFocusedPeer = this;
 }
+```
 
 
 
@@ -74,18 +78,18 @@ In file juce_FileChooser_ios.mm
 getViewController
 
 Change to this at line 189
-
+```
             UIDocumentPickerMode pickerMode = UIDocumentPickerModeExportToService;
-
+```
 Like this:
 
-
+```
 //            UIDocumentPickerMode pickerMode = currentFileOrDirectory.existsAsFile()
 //                                                ? UIDocumentPickerModeExportToService
 //                                                : UIDocumentPickerModeMoveToService;
             // <-- fix: always show "Save" -->
             UIDocumentPickerMode pickerMode = UIDocumentPickerModeExportToService;
-
+```
 
 
 
@@ -99,7 +103,6 @@ handleMousePosition
 Add this:
 
 ```
-
 #if JUCE_IOS
     
     void handleMousePosition (Point<int> globalMousePos)

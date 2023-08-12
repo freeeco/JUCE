@@ -5,7 +5,7 @@ Fixes just for Desktop
 Fixes small white corners of tooltip windows on some hosts
 -----------------------------------------------------------
 
-In file juce_TooltipWindow.ccp
+In file juce_TooltipWindow.cpp
 
 TooltipWindow::TooltipWindow
 

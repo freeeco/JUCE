@@ -189,7 +189,7 @@ void AudioProcessorEditor::editorResized (bool wasResized)
         {
             resizableCorner->setVisible (! resizerHidden);
 
-            const int resizerSize = 18;
+            const int resizerSize = 35;
             resizableCorner->setBounds (getWidth() - resizerSize,
                                         getHeight() - resizerSize,
                                         resizerSize, resizerSize);

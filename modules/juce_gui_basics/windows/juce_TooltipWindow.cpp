@@ -31,7 +31,7 @@ TooltipWindow::TooltipWindow (Component* parentComp, int delayMs)
       millisecondsBeforeTipAppears (delayMs)
 {
     setAlwaysOnTop (true);
-    setOpaque (true);
+    setOpaque (false); // set to false avoids white triangles on some hosts
     setAccessible (false);
 
     if (parentComp != nullptr)

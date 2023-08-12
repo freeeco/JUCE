@@ -1,5 +1,5 @@
 
-Missing ok / cancel dialog boxes on iOS
+Ok / Cancel dialog boxes not showing on iOS:
 
 In file juce_UIViewComponentPeer_ios.mm
 
@@ -25,41 +25,9 @@ Like this:
 
 
 
-Fix slow clicking needed on menus on iOS
-
-In file juce_PopupMenu.cpp
-
-handleMousePosition
 
 
-
-Add this at line 1384:
-
-
-  if (timeNow > window.timeEnteredCurrentChildComp +
-#if JUCE_IOS
-                10
-#else
-                100
-#endif
-
-
-
-Like this:
-
- if (timeNow > window.timeEnteredCurrentChildComp +
-#if JUCE_IOS
-                10
-#else
-                100
-#endif
-             && window.reallyContains (localMousePos, true)
-
-
-
-
-
-Always show "Save" in save dialog box on iOS
+Always show "Save" rather than "Move" in save dialog box on iOS:
 
 In file juce_FileChooser_ios.mm
 
@@ -82,7 +50,7 @@ Like this:
 
 
 
-Small white corners of tooltip windows on some hosts
+Small white corners of tooltip windows on some hosts:
 
 In file juce_TooltipWindow.ccp
 
@@ -100,7 +68,7 @@ to:
 
 
 
-Resizable corner area is too small and fiddly to find with mouse
+Resizable corner area is too small and fiddly to find with mouse:
 
 In file juce_AudioProcessorEditor.cpp
 
@@ -114,3 +82,76 @@ Change
 to 
 
             const int resizerSize = 35;
+
+
+
+
+
+
+Fix fast tapping on popup menus not registered on iOS, and also sub menus not working:
+
+In file juce_PopupMenu.cpp
+
+handleMousePosition
+
+Add this:
+
+
+#if JUCE_IOS
+    
+    void handleMousePosition (Point<int> globalMousePos)
+    {
+        auto localMousePos = window.getLocalPoint (nullptr, globalMousePos);
+        auto timeNow = Time::getMillisecondCounter();
+        
+        if (timeNow > window.timeEnteredCurrentChildComp + 10
+             && window.reallyContains (localMousePos, true)
+             && window.currentChild != nullptr
+             && ! (window.disableMouseMoves || window.isSubMenuVisible()))
+        {
+            window.showSubMenuFor (window.currentChild);
+        }
+        
+        // highlight only if pressed
+        
+        if (ModifierKeys::currentModifiers.isAnyMouseButtonDown()
+            || ComponentPeer::getCurrentModifiersRealtime().isAnyMouseButtonDown()){
+            highlightItemUnderMouse (globalMousePos, localMousePos, timeNow);
+        }
+        
+        const bool overScrollArea = scrollIfNecessary (localMousePos, timeNow);
+        const bool isOverAny = window.isOverAnyMenu();
+        
+        if (window.hideOnExit && window.hasBeenOver && ! isOverAny)
+            window.hide (nullptr, true);
+        else
+            checkButtonState (localMousePos, timeNow, isDown, overScrollArea, isOverAny);
+    }
+
+#else
+    
+    void handleMousePosition (Point<int> globalMousePos)
+    {
+        auto localMousePos = window.getLocalPoint (nullptr, globalMousePos);
+        auto timeNow = Time::getMillisecondCounter();
+
+        if (timeNow > window.timeEnteredCurrentChildComp + 100
+             && window.reallyContains (localMousePos, true)
+             && window.currentChild != nullptr
+             && ! (window.disableMouseMoves || window.isSubMenuVisible()))
+        {
+            window.showSubMenuFor (window.currentChild);
+        }
+
+        highlightItemUnderMouse (globalMousePos, localMousePos, timeNow);
+
+        const bool overScrollArea = scrollIfNecessary (localMousePos, timeNow);
+        const bool isOverAny = window.isOverAnyMenu();
+
+        if (window.hideOnExit && window.hasBeenOver && ! isOverAny)
+            window.hide (nullptr, true);
+        else
+            checkButtonState (localMousePos, timeNow, isDown, overScrollArea, isOverAny);
+    }
+    
+#endif

@@ -1,3 +1,6 @@
+Fixes just for Desktop
+======================
+
 
 Small white corners of tooltip windows on some hosts
 -----------------------------------------------------

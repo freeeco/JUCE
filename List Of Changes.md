@@ -2,8 +2,8 @@ Fixes just for Desktop
 ======================
 
 
-Small white corners of tooltip windows on some hosts
------------------------------------------------------
+Fixes small white corners of tooltip windows on some hosts
+-----------------------------------------------------------
 
 In file juce_TooltipWindow.ccp
 
@@ -46,8 +46,8 @@ Fixes just for iOS
 ==================
 
 
-Ok / Cancel dialog boxes not showing on iOS
---------------------------------------------
+Fixes Ok / Cancel dialog boxes not showing on iOS
+--------------------------------------------------
 
 In file juce_UIViewComponentPeer_ios.mm
 

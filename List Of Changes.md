@@ -99,7 +99,7 @@ Like this:
 
 
 
-Fix fast tapping on popup menus not registered on iOS, and also sub-menus not working
+Fixes fast tapping on popup menus not registered on iOS, and also sub-menus not working
 --------------------------------------------------------------------------------------
 
 In file juce_PopupMenu.cpp

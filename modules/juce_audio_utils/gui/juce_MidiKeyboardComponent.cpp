@@ -367,7 +367,8 @@ void MidiKeyboardComponent::drawWhiteNote (int midiNoteNumber, Graphics& g, Rect
 
     if (text.isNotEmpty())
     {
-        auto fontHeight = jmin (12.0f, getKeyWidth() * 0.9f);
+//        auto fontHeight = jmin (12.0f, getKeyWidth() * 0.9f);
+        auto fontHeight = jmin (18.0f, getKeyWidth() * 0.9f); // easier to read text size
 
         g.setColour (textColour);
         g.setFont (Font (fontHeight).withHorizontalScale (0.8f));

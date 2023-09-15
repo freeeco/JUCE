@@ -170,3 +170,21 @@ Add this:
 
 ```
 
+
+
+Easier to read text size for MIDI keyboard component
+----------------------------------------------------
+
+In juce_MidiKeyboardComponent.cpp
+
+in MidiKeyboardComponent::drawWhiteNote
+
+change 
+```
+        auto fontHeight = jmin (12.0f, getKeyWidth() * 0.9f);
+```
+
+to 
+```
+        auto fontHeight = jmin (18.0f, getKeyWidth() * 0.9f); // easier to read text size
+```
